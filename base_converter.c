@@ -46,9 +46,9 @@ int parse_num(char* num, int base) {
     if ('0' <= c && c <= '9')
       to_add = c - '0';
     if ('a' <= c && c <= 'f')
-      to_add = c - 'a';
+      to_add = c - 'a' + 10;
     if ('A' <= c && c <= 'F')
-      to_add = c - 'A';
+      to_add = c - 'A' + 10;
 
     if (to_add > base - 1)
       invalid_num("digit '%c' is too large", c);
