@@ -3,11 +3,11 @@
 #include <limits.h>
 
 int parse_base(char* base) {
-  
-#define invalid_base(fmt, ...) do {                               \
-    printf("%d\n", __LINE__);                                     \
-    printf("Invalid base '%s': " fmt "\n", base, ## __VA_ARGS__); \
-    return -1;                                                    \
+
+  char* base0 = base;
+#define invalid_base(fmt, ...) do {                                \
+    printf("Invalid base '%s': " fmt "\n", base0, ## __VA_ARGS__); \
+    return -1;                                                     \
   } while (0)
   
   int res = 0;
@@ -31,15 +31,19 @@ int parse_base(char* base) {
 
 int parse_num(char* num, int base) {
 
+  char* num0 = num;
 #define invalid_num(fmt, ...) do {                                      \
-    printf("Invalid base '%d' number '%s': "                            \
-           fmt "\n", base, num, ## __VA_ARGS__);                        \
+    printf("Invalid base %d number '%s': "                              \
+           fmt "\n", base, num0, ## __VA_ARGS__);                       \
     return -1;                                                          \
   } while(0);
   
   int res = 0;
   
   for (char c; (c = *num); num++) {
+    if (res > INT_MAX / base)
+      invalid_num("number is too large. Max is %d", INT_MAX);
+    
     res *= base;
     int to_add;
     
@@ -99,6 +103,9 @@ int main(int argc, char** argv) {
     return 1;
   
   int num = parse_num(argv[3], base1);
+  
+  if (num == -1)
+    return 1;
 
   print_converted(num, base2);
 
